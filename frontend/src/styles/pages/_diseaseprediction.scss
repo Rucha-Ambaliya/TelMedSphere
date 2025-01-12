@@ -190,6 +190,7 @@
         position: relative;
         display: inline-block;
         visibility: visible;
+        // mx-0 my-[10px] w-[5rem] h-[5rem] accent-blue-8 content-none cursor-pointer rounded-full ring-[3px] ring-blue-1 -top-[3px] -left-[1px] relative inline-block visible checked:accent-blue-9 checked:ring-[4px] checked:ring-blue-1
     }
 
     input[type="radio"]:checked::after {
@@ -300,142 +301,142 @@
     }
 
 
-    #Symptoms {
-        line-height: 1.7;
-        padding-top: 2rem;
+    // #Symptoms {
+    //     line-height: 1.7;
+    //     padding-top: 2rem;
 
-        .grid-container {
-            display: grid;
-            grid-template-rows: 1fr;
-            grid-template-columns: 0.5fr 0.7fr;
+    //     .grid-container {
+    //         display: grid;
+    //         grid-template-rows: 1fr;
+    //         grid-template-columns: 0.5fr 0.7fr;
 
-            @include devices(900px) {
-                grid-template-columns: 0.5fr 0.95fr;
-            }
+    //         @include devices(900px) {
+    //             grid-template-columns: 0.5fr 0.95fr;
+    //         }
 
-            @include devices(600px) {
-                grid-template-rows: 2fr;
-                grid-template-columns: 0.9fr;
-            }
-        }
+    //         @include devices(600px) {
+    //             grid-template-rows: 2fr;
+    //             grid-template-columns: 0.9fr;
+    //         }
+    //     }
 
-        .searchSymptomsInput {
-            border: none;
-            border-bottom: 1px solid var(--blue-color-6);
-            transition: ease-in-out 0.2s;
-            box-sizing: border-box;
-            padding: 0.5rem;
-            color: var(--blue-color-7);
-            width: 95%;
-        }
+    //     .searchSymptomsInput {
+    //         border: none;
+    //         border-bottom: 1px solid var(--blue-color-6);
+    //         transition: ease-in-out 0.2s;
+    //         box-sizing: border-box;
+    //         padding: 0.5rem;
+    //         color: var(--blue-color-7);
+    //         width: 95%;
+    //     }
 
-        .searchSymptomsInput:focus {
-            outline: none !important;
-            border-bottom: 3px solid var(--blue-color-6);
-            transition: ease-in-out 0.2s;
-        }
+    //     .searchSymptomsInput:focus {
+    //         outline: none !important;
+    //         border-bottom: 3px solid var(--blue-color-6);
+    //         transition: ease-in-out 0.2s;
+    //     }
         
-        .symtomsListBox {
-            width: 100%;
-            height: 35vh;
-            overflow-y: scroll;
-            color: var(--grey-color-3);
-        }
+    //     .symtomsListBox {
+    //         width: 100%;
+    //         height: 35vh;
+    //         overflow-y: scroll;
+    //         color: var(--grey-color-3);
+    //     }
         
-        ul.symtomsListBox {
-            list-style: none;
-            line-height: 1.7rem;
-            padding-left: 0;
-        }
+    //     ul.symtomsListBox {
+    //         list-style: none;
+    //         line-height: 1.7rem;
+    //         padding-left: 0;
+    //     }
 
-        ul.symtomsListBox > li {
-            padding: 0rem 0.5rem;
-            transition: ease-in-out 0.2s;
-            border-radius: 5px;
-        }
+    //     ul.symtomsListBox > li {
+    //         padding: 0rem 0.5rem;
+    //         transition: ease-in-out 0.2s;
+    //         border-radius: 5px;
+    //     }
         
-        ul.symtomsListBox > li > button {
-            padding: 1px 0.5rem;
-        }
+    //     ul.symtomsListBox > li > button {
+    //         padding: 1px 0.5rem;
+    //     }
 
-        ul.symtomsListBox > li > button:hover {
-            cursor: pointer;
-            background-color: var(--blue-color-1);
-            transition: ease-in-out 0.2s;
-            color: var(--blue-color-9);
-        }
+    //     ul.symtomsListBox > li > button:hover {
+    //         cursor: pointer;
+    //         background-color: var(--blue-color-1);
+    //         transition: ease-in-out 0.2s;
+    //         color: var(--blue-color-9);
+    //     }
         
-        ul.symtomsListBox > li > button {
-            border: 0;
-            width: 100%;
-            height: 100%;
-            text-align: left;
-            line-height: 2rem;
-        }
+    //     ul.symtomsListBox > li > button {
+    //         border: 0;
+    //         width: 100%;
+    //         height: 100%;
+    //         text-align: left;
+    //         line-height: 2rem;
+    //     }
 
-        .symtomsListBox > ul > li > button:hover {
-            cursor: pointer;
-        }
+    //     .symtomsListBox > ul > li > button:hover {
+    //         cursor: pointer;
+    //     }
 
-        .symtomsListBox > ul > li > button:focus {
-            outline: none;
-        }
+    //     .symtomsListBox > ul > li > button:focus {
+    //         outline: none;
+    //     }
         
-        .UserSymptoms > ul {
-            list-style: none;
-            padding: 1rem;
-        }
+    //     .UserSymptoms > ul {
+    //         list-style: none;
+    //         padding: 1rem;
+    //     }
 
-        .UserSymptoms > ul > li {
-            background-color: var(--blue-color-9);
-            color: var(--white-color);
-            padding: 0.5rem;
-            border-radius: 1rem;
-            font-size: 1rem;
-            margin: 5px;
-            display: inline-block;
-        }
+    //     .UserSymptoms > ul > li {
+    //         background-color: var(--blue-color-9);
+    //         color: var(--white-color);
+    //         padding: 0.5rem;
+    //         border-radius: 1rem;
+    //         font-size: 1rem;
+    //         margin: 5px;
+    //         display: inline-block;
+    //     }
         
-        .UserSymptoms > ul > li > button {
-            border: none;
-            background-color: var(--white-color);
-            color: var(--blue-color-9);
-            border-radius: 5rem;
-            font-size: 0.8rem;
-            font-weight: 600;
-            padding: 0.2rem 0.5rem;
-            transition: ease 0.2s;
-        }
+    //     .UserSymptoms > ul > li > button {
+    //         border: none;
+    //         background-color: var(--white-color);
+    //         color: var(--blue-color-9);
+    //         border-radius: 5rem;
+    //         font-size: 0.8rem;
+    //         font-weight: 600;
+    //         padding: 0.2rem 0.5rem;
+    //         transition: ease 0.2s;
+    //     }
 
-        .UserSymptoms > ul > li > button:hover {
-            cursor: pointer;
-            background-color: var(--blue-color-1);
-            transition: all 0.3s ease-in-out;
-        }
+    //     .UserSymptoms > ul > li > button:hover {
+    //         cursor: pointer;
+    //         background-color: var(--blue-color-1);
+    //         transition: all 0.3s ease-in-out;
+    //     }
 
-        .resetButton {
-            @include flexbox(center, center);
-        }
+    //     .resetButton {
+    //         @include flexbox(center, center);
+    //     }
 
-        .usa-button {
-            background-color: var(--blue-color-3);
-            border: 1px solid var(--blue-color-5);
-            color: var(--white-color);
-            padding: 10px 12px;
-            border-radius: 5px;
-            margin: 8px 5px;
-            font-family: 'Montserrat', sans-serif;
-            transition: all 0.3s ease-in-out;
+    //     .usa-button {
+    //         background-color: var(--blue-color-3);
+    //         border: 1px solid var(--blue-color-5);
+    //         color: var(--white-color);
+    //         padding: 10px 12px;
+    //         border-radius: 5px;
+    //         margin: 8px 5px;
+    //         font-family: 'Montserrat', sans-serif;
+    //         transition: all 0.3s ease-in-out;
             
-            &:hover, &:active, &:disabled {
-                background-color: var(--blue-color-5);
-            }
+    //         &:hover, &:active, &:disabled {
+    //             background-color: var(--blue-color-5);
+    //         }
 
-            &:disabled {
-                cursor: not-allowed;
-            }
-        }
-    }
+    //         &:disabled {
+    //             cursor: not-allowed;
+    //         }
+    //     }
+    // }
 
 
     #Disease {
