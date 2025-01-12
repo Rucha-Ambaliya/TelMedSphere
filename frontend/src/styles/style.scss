@@ -1,15 +1,19 @@
-
 // Base
 @import "./base/variables";
 @import "./base/mixins";
 @import "./base/reset";
 @import "./base/common";
 
+
 // Components
-@import "./components/header";
-@import "./components/form";
+
+
+
+
+
 @import "./components/filterbar";
-@import "./components/searchbar";
+
+
 
 // Pages
 @import "./pages/home";
@@ -17,6 +21,7 @@
 @import "./pages/doctors";
 @import "./pages/landingpage";
 @import "./pages/medicines";
+
 @import "./pages/medicinedetails";
 @import "./pages/meetpage";
 @import "./pages/success";
@@ -26,3 +31,4 @@
 @import "./pages/orders";
 @import "./pages/dispred";
 @import "./pages/mywallet";
+

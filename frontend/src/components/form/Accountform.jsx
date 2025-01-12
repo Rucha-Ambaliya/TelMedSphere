@@ -25,6 +25,7 @@ const AccountForm = () => {
     const [isSuccessLoading, setIsSuccessLoading] = useState(false);
     const [doctorId, setDoctorId] = useState("");
     const [isForgotPassword, setIsForgotPassword] = useState(false);
+    const [isSignupVisible, setIsSignupVisible] = useState(false);
 
     const formRef = useRef();
 
@@ -33,8 +34,6 @@ const AccountForm = () => {
     });
 
     useScrollDisable(isFormOpen);
-
-    const [isSignupVisible, setIsSignupVisible] = useState(false);
 
     const resetForm = () => {
         toggleForm(false);
@@ -47,6 +46,7 @@ const AccountForm = () => {
         setPasswd("");
         setSpecialization("");
         setIsForgotPassword(false);
+        setIsSignupVisible(false);
     };
 
     const handleIsSignupVisible = () => {
@@ -76,25 +76,25 @@ const AccountForm = () => {
     };
 
     const checkAge = (a) => {
-        const t = ( parseInt(a) > 0 && parseInt(a) <= 120 && /^[0-9]{1,3}$/.test(a));
+        const t = (parseInt(a) > 0 && parseInt(a) <= 120 && /^[0-9]{1,3}$/.test(a));
         setIsInvAge(!t);
         return t;
-    }
+    };
 
     const checkEmail = (email) => {
         // eslint-disable-next-line
         const res = (/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email));
         setIsInvEmail(!res);
         return res;
-    }
+    };
 
     const checkPasswd = (passwd) => {
         const res = (/^.{6,}$/.test(passwd));
         setIsInvPass(!res);
         return res;
-    }
+    };
 
-     const validatePhoneNumber = (phoneNumber) => {
+    const validatePhoneNumber = (phoneNumber) => {
         const pattern = /^\+?1?\d{10,10}$/;
         const res = pattern.test(phoneNumber);
         setIsInvPhone(!res);
@@ -123,8 +123,14 @@ const AccountForm = () => {
                 setTimeout(() => {
                     setIsAlert("");
                     setFormUserInfo({
-                        username, usertype, gender, phone,
-                        email, passwd, specialization, age,
+                        username,
+                        usertype,
+                        gender,
+                        phone,
+                        email,
+                        passwd,
+                        specialization,
+                        age,
                         verified: false
                     });
                     resetForm();
@@ -158,155 +164,148 @@ const AccountForm = () => {
         setIsSuccessLoading(false);
     };
 
-    
     return (
         <>
             {isFormOpen && (
-                <div className="backdrop">
-                    <div className="modal_centered">
-                        <form ref={formRef} onSubmit={isForgotPassword ? handleForgotPassword : handleFormSubmit} className="account_form">
+             <div className="fixed inset-0 flex items-center justify-center z-[+9999] p-4">
+
+                    <div className="w-full max-w-lg bg-gray-50 ">
+                        <form ref={formRef} onSubmit={isForgotPassword ? handleForgotPassword : handleFormSubmit} 
+                             className="bg-gray rounded-lg p-8 relative w-full max-h-[90vh] overflow-y-auto shadow-lg z-[1050]">
                             {isAlert !== "" && (
-                                <Alert severity={isAlert} className="form_alert">
-                                    {alertCont}
-                                </Alert>
+                                <div className="mb-4">
+                                    <Alert severity={isAlert}>{alertCont}</Alert>
+                                </div>
                             )}
 
-                            <div className="form_head">
-                                <h2>{isForgotPassword ? 'Forgot Password' : (isSignupVisible ? 'Sign Up' : 'Login')}</h2>
+                            <div className="text-center mb-8">
+                                <h2 className="text-2xl font-semibold text-gray-900 mb-2">
+                                    {isForgotPassword ? 'Forgot Password' : (isSignupVisible ? 'Sign Up' : 'Login')}
+                                </h2>
                                 {!isForgotPassword && (
-                                    <p>
+                                    <p className="text-gray-600 text-sm">
                                         {isSignupVisible ? 'Already have an account?' : 'New to TelMedSphere?'}
-                                        <button type="button" onClick={handleIsSignupVisible}>
+                                        <button type="button" 
+                                                onClick={handleIsSignupVisible}
+                                                className="text-blue-600 font-medium ml-2 hover:underline">
                                             {isSignupVisible ? 'Login' : 'Create an account'}
                                         </button>
                                     </p>
                                 )}
                             </div>
 
-                            <div className="form_body">
+                            <div className="space-y-4">
                                 {isSignupVisible && (
                                     <>
-                                        <div className="input_box">
-                                            <label>Register as</label>
-                                            <div className="radio_inputs">
-                                                <label>
-                                                    <input
-                                                        type="radio"
-                                                        name="usertype"
-                                                        value="patient"
-                                                        checked={usertype === "patient"}
-                                                        onChange={(e) => setUsertype(e.target.value)}
-                                                    />
-                                                    <span>Patient</span>
-                                                </label>
-                                                <label>
-                                                    <input
-                                                        type="radio"
-                                                        name="usertype"
-                                                        value="doctor"
-                                                        checked={usertype === "doctor"}
-                                                        onChange={(e) => setUsertype(e.target.value)}
-                                                    />
-                                                    <span>Doctor</span>
-                                                </label>
-                                                
+                                        <div>
+                                            <label className="block text-gray-600 mb-2">Register as</label>
+                                            <div className="flex gap-6 mt-2">
+                                                {['patient', 'doctor'].map((type) => (
+                                                    <label key={type} className="flex items-center gap-2 cursor-pointer">
+                                                        <input
+                                                            type="radio"
+                                                            name="usertype"
+                                                            value={type}
+                                                            checked={usertype === type}
+                                                            onChange={(e) => setUsertype(e.target.value)}
+                                                            className="w-4 h-4 text-blue-600"
+                                                        />
+                                                        <span className="text-gray-700 capitalize">{type}</span>
+                                                    </label>
+                                                ))}
                                             </div>
-
                                         </div>
 
-                                 <div className="relative">
-                                         <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
-                                         <input
-                                            type="text"
-                                            placeholder="Username"
-                                            value={username}
-                                            onChange={(e) => setUsername(e.target.value)}
-                                            className="w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                            required
-                                        />
-                                    </div>
-
-                                    {usertype === "doctor" && (
-                                        <>
+                                        <div className="relative">
+                                            <User className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
                                             <input
                                                 type="text"
-                                                placeholder="Specialization (e.g., Cancer Surgeon)"
-                                                value={specialization}
-                                                onChange={(e) => setSpecialization(e.target.value)}
-                                                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                placeholder="Username"
+                                                value={username}
+                                                onChange={(e) => setUsername(e.target.value)}
+                                                className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                                 required
                                             />
-                                            <input
-                                                type="text"
-                                                placeholder="Doctor ID"
-                                                value={doctorId}
-                                                onChange={(e) => setDoctorId(e.target.value)}
-                                                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                                required
-                                            />
-                                        </>
-                                    )}
+                                        </div>
 
-                                    {usertype === "patient" && (
-                                        <div>
+                                        {usertype === "doctor" && (
+                                            <>
+                                                <input
+                                                    type="text"
+                                                    placeholder="Specialization (e.g., Cancer Surgeon)"
+                                                    value={specialization}
+                                                    onChange={(e) => setSpecialization(e.target.value)}
+                                                    className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                    required
+                                                />
+                                                <input
+                                                    type="text"
+                                                    placeholder="Doctor ID"
+                                                    value={doctorId}
+                                                    onChange={(e) => setDoctorId(e.target.value)}
+                                                    className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                    required
+                                                />
+                                            </>
+                                        )}
+
+                                        {usertype === "patient" && (
+                                            <div>
+                                                <input
+                                                    type="text"
+                                                    placeholder="Age"
+                                                    value={age}
+                                                    onChange={(e) => {
+                                                        checkAge(e.target.value);
+                                                        setAge(e.target.value);
+                                                    }}
+                                                    className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                    required
+                                                />
+                                                {age !== "" && isInvAge && (
+                                                    <p className="text-red-500 text-sm mt-1">Invalid Age</p>
+                                                )}
+                                            </div>
+                                        )}
+
+                                        <div className="flex gap-6">
+                                            {["male", "female", "other"].map((g) => (
+                                                <label key={g} className="flex items-center gap-2 cursor-pointer">
+                                                    <input
+                                                        type="radio"
+                                                        name="gender"
+                                                        value={g}
+                                                        checked={gender === g}
+                                                        onChange={(e) => setGender(e.target.value)}
+                                                        className="w-4 h-4 text-blue-600"
+                                                    />
+                                                    <span className="text-gray-700 capitalize">{g}</span>
+                                                </label>
+                                            ))}
+                                        </div>
+
+                                        <div className="relative">
+                                            <Phone className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
                                             <input
                                                 type="text"
-                                                placeholder="Age"
-                                                value={age}
+                                                placeholder="Phone"
+                                                value={phone}
                                                 onChange={(e) => {
-                                                    checkAge(e.target.value);
-                                                    setAge(e.target.value);
+                                                    validatePhoneNumber(e.target.value);
+                                                    setPhone(e.target.value);
                                                 }}
-                                                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                                 required
                                             />
-                                            {age !== "" && isInvAge && (
-                                                <p className="text-red-500 text-sm mt-1">Invalid Age</p>
+                                            {phone !== "" && isInvPhone && (
+                                                <p className="text-red-500 text-sm mt-1">Invalid Phone Number</p>
                                             )}
                                         </div>
-                                    )}
-
-                                    <div className="flex gap-4">
-                                        {["male", "female", "other"].map((g) => (
-                                            <label key={g} className="flex items-center">
-                                                <input
-                                                    type="radio"
-                                                    name="gender"
-                                                    value={g}
-                                                    checked={gender === g}
-                                                    onChange={(e) => setGender(e.target.value)}
-                                                    className="w-4 h-4 text-blue-600"
-                                                />
-                                                <span className="ml-2 capitalize">{g}</span>
-                                            </label>
-                                        ))}
-                                    </div>
-
-                                    <div className="relative">
-                                        <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
-                                        <input
-                                            type="text"
-                                            placeholder="Phone"
-                                            value={phone}
-                                            onChange={(e) => {
-                                                validatePhoneNumber(e.target.value);
-                                                setPhone(e.target.value);
-                                            }}
-                                            className="w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                            required
-                                        />
-                                        {phone !== "" && isInvPhone && (
-                                            <p className="text-red-500 text-sm mt-1">Invalid Phone Number</p>
-                                        )}
-                                    </div>
-
-
-                             
                                     </>
                                 )}
 
-                                <div className="input_box">
-                                    <Mail size={20} />
+                                <div className="relative">
+                                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
                                     <input
                                         type="email"
                                         placeholder="Email"
@@ -315,16 +314,17 @@ const AccountForm = () => {
                                             checkEmail(e.target.value);
                                             setEmail(e.target.value);
                                         }}
+                                        className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                         required
                                     />
                                     {email !== "" && isInvEmail && (
-                                        <span className="error_message">Invalid Email</span>
+                                        <p className="text-red-500 text-sm mt-1">Invalid Email</p>
                                     )}
                                 </div>
 
                                 {!isForgotPassword && (
-                                    <div className="input_box">
-                                        <Lock size={20} />
+                                    <div className="relative">
+                                        <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
                                         <input
                                             type="password"
                                             placeholder="Password"
@@ -333,10 +333,11 @@ const AccountForm = () => {
                                                 checkPasswd(e.target.value);
                                                 setPasswd(e.target.value);
                                             }}
+                                            className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                             required
                                         />
                                         {isSignupVisible && passwd !== "" && isInvPass && (
-                                            <span className="error_message">Password should contain at least 6 characters</span>
+                                            <p className="text-red-500 text-sm mt-1">Password should contain at least 6 characters</p>
                                         )}
                                     </div>
                                 )}
@@ -345,7 +346,7 @@ const AccountForm = () => {
                                     <button
                                         type="button"
                                         onClick={() => setIsForgotPassword(true)}
-                                        className="forgot_password_btn"
+                                        className="text-blue-600 text-sm hover:underline text-left"
                                     >
                                         Forgot Password?
                                     </button>
@@ -355,15 +356,15 @@ const AccountForm = () => {
                                     <button
                                         type="button"
                                         onClick={() => setIsForgotPassword(false)}
-                                        className="back_to_login_btn"
+                                        className="text-blue-600 text-sm hover:underline text-left"
                                     >
                                         Back to Login
                                     </button>
                                 )}
 
-                                <button
+<button
                                     type="submit"
-                                    className="submit_btn"
+                                    className="w-full bg-blue-600 text-white py-3 rounded-lg font-medium mt-4 hover:bg-blue-700 transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
                                     disabled={isSuccessLoading}
                                 >
                                     {isSuccessLoading ? (
@@ -376,7 +377,7 @@ const AccountForm = () => {
 
                             <button
                                 type="button"
-                                className="close_btn"
+                                className="absolute top-4 right-4 w-8 h-8 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-gray-900 flex items-center justify-center transition-colors text-xl"
                                 onClick={() => toggleForm(false)}
                             >
                                 ×

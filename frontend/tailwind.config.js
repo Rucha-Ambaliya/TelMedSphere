@@ -66,6 +66,13 @@ module.exports = {
           "100%": { opacity: "1", transform: "translateX(0)" },
         },
       },
+      zIndex: {
+        '-1': '-1',
+        50: '50',
+        1000: '1000',
+        1050: '1050',
+        9999: '9999', // Ensure the modal is on top
+      },
     },
   },
   plugins: [],
