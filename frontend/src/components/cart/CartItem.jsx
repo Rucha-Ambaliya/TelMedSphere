@@ -18,7 +18,7 @@ const CartItem = (props) => {
 
     return (
         <>
-            <div className="cart_item bg-blue grid grid-cols-7 rounded-[12px]">
+            <div className="cart_item bg-blue grid grid-cols-7 rounded-[12px] max-md:gap-8 mb-6">
                 <figure className="col-span-2 max-sm:col-span-3">
                     <Link to={`/all-medicines/medicine-details/${id}`}>
                         <img src={images[0]} alt="product-img" className='rounded-[12px] max-w-[150px] max-h-[150px] w-full'/>
