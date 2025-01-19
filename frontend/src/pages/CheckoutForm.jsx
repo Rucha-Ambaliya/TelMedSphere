@@ -92,7 +92,7 @@ export default function CheckoutForm() {
     <div className="w-full flex justify-center">
       <form
         onSubmit={handleSubmit}
-        className="w-[30vw] max-w-[900px] shadow-[0px_0px_0px_0.5px_rgba(50,50,93,0.1),_0px_2px_5px_0px_rgba(50,50,93,0.1),_0px_1px_1.5px_0px_rgba(0,0,0,0.07)] rounded-[7px] p-[40px] mt-10"
+        className="w-full max-w-[500px] shadow-[0px_0px_0px_0.5px_rgba(50,50,93,0.1),_0px_2px_5px_0px_rgba(50,50,93,0.1),_0px_1px_1.5px_0px_rgba(0,0,0,0.07)] rounded-[7px] p-[40px] mt-10 mx-6"
         style={{ color: "var(--blue-color-8)" }}
       >
         <div id="amount">
@@ -108,7 +108,7 @@ export default function CheckoutForm() {
           className="mt-[24px]"
         />
         <button
-          className="bg-[#5469d4] font-sans text-white-1 ounded-[4px] border-0 py-[12px] px-[16px] text-[16px] font-semibold cursor-pointer block transition-all duration-200 ease shadow-[0_4px_5.5px_0_rgba(0,0,0,0.07) w-full hover:filter hover:contrast-[115%] disabled:opacity-50 cursor-default"
+          className="bg-[#5469d4] font-sans text-white-1 ounded-[4px] border-0 py-[12px] px-[16px] text-[16px] font-semibold cursor-pointer block transition-all duration-200 ease shadow-[0_4px_5.5px_0_rgba(0,0,0,0.07) w-full hover:filter hover:contrast-[115%] disabled:opacity-50 cursor-default mt-6"
           disabled={isLoading || !stripe || !elements}
           id="submit"
         >
@@ -118,7 +118,7 @@ export default function CheckoutForm() {
                 <div role="status">
                   <svg
                     aria-hidden="true"
-                    class="w-4 h-4 me-2 text-gray-200 animate-spin dark:text-gray-600 fill-[#5469d4]"
+                    class="w-4 h-4 mt-6 text-gray-200 animate-spin dark:text-gray-600 fill-[#5469d4]"
                     viewBox="0 0 100 101"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
