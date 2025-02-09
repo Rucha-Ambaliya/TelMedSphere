@@ -23,10 +23,10 @@ jobs:
       - name: Install dependencies
         run: pip install requests  # ✅ Install only necessary dependencies
 
-      - name: Debug: Check File Structure
+      - name: Debug Check File Structure
         run: ls -R backend/utils  # ✅ Ensure `send_emails.py` is in place
 
-      - name: Debug: Print Environment Variables
+      - name: Debug Print Environment Variables
         run: |
           echo "PORT: ${{ secrets.PORT }}"
           echo "HOST_EMAIL: ${{ secrets.HOST_EMAIL }}"
