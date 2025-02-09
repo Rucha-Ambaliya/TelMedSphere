@@ -46,6 +46,10 @@ for email in scheduled_emails:
 
 def send_email(subject, body, recipient):
     """Send an email to a single recipient."""
+    print(f"📧 Attempting to send email to: {recipient}")
+    print(f"📜 Subject: {subject}")
+    print(f"💬 Body: {body}")
+
     try:
         server = smtplib.SMTP(SMTP_SERVER, SMTP_PORT)
         server.starttls()
@@ -59,6 +63,7 @@ def send_email(subject, body, recipient):
 
         server.sendmail(EMAIL_USER, recipient, msg.as_string())
         server.quit()
+
         print(f"✅ Email sent successfully to {recipient}")
         return True
     except Exception as e:
