@@ -1,7 +1,7 @@
 name: Send Scheduled Emails
 
 on:
-  schedule:
+  push:
     - cron: "*/1 * * * *"  # Runs every 5 minutes
 
 jobs:
