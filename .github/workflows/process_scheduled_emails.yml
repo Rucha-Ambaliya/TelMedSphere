@@ -20,28 +20,21 @@ jobs:
         with:
           python-version: '3.9'
 
-      # - name: Load environment variables from `.env`
-      #   run: |
-      #     if [ -f backend/.env ]; then
-      #       echo "✅ .env file found. Loading..."
-      #       export $(grep -v '^#' backend/.env | xargs)
-      #       echo "PORT=${PORT}" >> $GITHUB_ENV
-      #       echo "HOST_EMAIL=${HOST_EMAIL}" >> $GITHUB_ENV
-      #       echo "PASSWORD=${PASSWORD}" >> $GITHUB_ENV
-      #     else
-      #       echo "❌ .env file missing!"
-      #       exit 1
-      #     fi
-
-      # - name: Check Environment Variables
-      #   run: |
-      #     if [ -z "${{ env.PORT }}" ] || [ -z "${{ env.HOST_EMAIL }}" ] || [ -z "${{ env.PASSWORD }}" ]; then
-      #       echo "❌ Missing environment variables. Check .env file!"
-      #       exit 1
-      #     fi
-
       - name: Install dependencies
         run: pip install requests  # ✅ Install only necessary dependencies
+
+      - name: Check Environment Variables
+        env:
+          PORT: ${{ secrets.PORT }}
+          HOST_EMAIL: ${{ secrets.HOST_EMAIL }}
+          PASSWORD: ${{ secrets.PASSWORD }}
+        run: |
+          if [ -z "$PORT" ] || [ -z "$HOST_EMAIL" ] || [ -z "$PASSWORD" ]; then
+            echo "❌ Missing environment variables. Set them in GitHub Secrets!"
+            exit 1
+          else
+            echo "✅ All environment variables are set."
+          fi
 
       - name: Ensure `send_emails.py` is executable
         run: chmod +x backend/utils/send_emails.py
@@ -49,12 +42,19 @@ jobs:
       - name: Send Emails
         env:
           SMTP_SERVER: "smtp.gmail.com"
-          PORT: ${{ env.PORT }}
-          HOST_EMAIL: ${{ env.HOST_EMAIL }}
-          PASSWORD: ${{ env.PASSWORD }}
-        run: python backend/utils/send_emails.py
+          PORT: ${{ secrets.PORT }}
+          HOST_EMAIL: ${{ secrets.HOST_EMAIL }}
+          PASSWORD: ${{ secrets.PASSWORD }}
+        run: |
+          if [ ! -f backend/utils/send_emails.py ]; then
+            echo "❌ send_emails.py not found!"
+            exit 1
+          fi
+          python backend/utils/send_emails.py
 
-      - name: Save Updated Email List
+      - name: Save Updated Email List (if exists)
+        if: success()
+        continue-on-error: true
         uses: actions/upload-artifact@v4
         with:
           name: scheduled-emails
