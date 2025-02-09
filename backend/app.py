@@ -19,6 +19,7 @@ from flask import Flask, request, jsonify
 import firebase_admin
 from firebase_admin import credentials, auth
 from utils.imageUploader import upload_file
+from utils.sendEmail import send_email
 
 load_dotenv()
 secret_key = secrets.token_hex(16)
@@ -212,8 +213,6 @@ def register():
             data['profile_picture'] = cloudinary_url
         if 'specialization' in data:
             del data['specialization']
-        if 'doctorId' in data:
-            del data['doctorId']
         
         patients.insert_one(data)
 
@@ -256,7 +255,6 @@ def register():
         data.setdefault('cart', [])
         data.setdefault('wallet_history', [])
         data.setdefault('wallet', 0)
-        data.setdefault('doctorId', "")
         if cloudinary_url:
             data['profile_picture'] = cloudinary_url
 
@@ -270,7 +268,6 @@ def register():
             "phone": data["phone"],
             "email": data["email"],
             "specialization": data["specialization"],
-            "doctorId": data["doctorId"],
             "verified": data["verified"],
             "profile_picture": data.get("profile_picture")
         }), 200
@@ -330,7 +327,6 @@ def login():
                 "phone": var["phone"],
                 "email": var["email"],
                 "specialization": var["specialization"],
-                "doctorId": var["doctorId"],
                 "verified": var.get("verified", False),
                 "profile_picture": var.get("profile_picture")
             }), 200
@@ -462,17 +458,21 @@ def mail_file():
     if "http" not in file_url:
         return jsonify({"error": "File upload failed", "details": file_url}), 500
     
+    # Retrieve patient details from the database
+    pat = patients.find_one({'email': user})
+    
     # Prepare the email message
     msg = Message(
         "Receipt cum Prescription for your Consultancy",
         recipients=[user]
-    )
-    
-    # Retrieve patient details from the database
-    pat = patients.find_one({'email': user})
-    
+    )    
     # Render the email HTML template with patient's username
     msg.html = render_template('email.html', Name=pat['username'])
+    # Attach the receipt PDF to the email message
+    with app.open_resource(file_path) as fp:
+        msg.attach("Receipt.pdf", "application/pdf", fp.read())
+    thread = Thread(target=send_message_async, args=(msg,))
+    thread.start()
     
     # Prepare and send the WhatsApp message with the PDF link
     whatsapp_message({
@@ -480,11 +480,7 @@ def mail_file():
         "body": f"Thank you for taking our consultancy. Please find your receipt here: {file_url}",
     })
     
-    # Attach the receipt PDF to the email message
-    with app.open_resource(file_path) as fp:
-        msg.attach("Receipt.pdf", "application/pdf", fp.read())
-    thread = Thread(target=send_message_async, args=(msg,))
-    thread.start()
+    
 
     # Delete the local file after sending the email
     try:
@@ -521,9 +517,22 @@ def set_appointment():
 
         pat = patients.find_one({'email': data['pemail']})
     
+        # Prepare the email message
+        # emailMsg = Message(
+        #     "Your Appointment has been booked on " + data['date'] + " at "+ data['time'] + " with Dr. " + doc['username'],
+        #     recipients=[pat["email"]]
+        # )
+        # # Render the email HTML template with patient's username
+        # emailMsg.html = render_template('email.html', Name=pat['username'])
+        # # send email message
+        # thread = Thread(target=send_message_async, args=(emailMsg,))
+        # thread.start()
+
+        send_email("Your Appointment has been booked on " + data['date'] + " at "+ data['time'] + " with Dr. " + doc['username'], "thank you", pat["email"], "2025-02-09 20:32:00")
+
         whatsapp_message({
             "to": f"whatsapp:{pat['phone']}",
-            "body": "Your Appointment has been booked on " + data['date'] + " at "+ data['time'] + " with Dr. " + doc['username'] +"."+"\n"+doc[email]
+            "body": "Your Appointment has been booked on " + data['date'] + " at "+ data['time'] + " with Dr. " + doc['username'] +"."+"\n"+ doc["email"]
         })
 
         doctor.update_one({'email': email}, {'$set': {'upcomingAppointments': doc['upcomingAppointments']}})
@@ -683,8 +692,6 @@ def update_details():
             update_data['specialization'] = data['specialization']
         if 'fee' in data:
             update_data['fee'] = data['fee']
-        if 'doctorId' in data:
-            update_data['doctorId'] = data['doctorId']
     else:  # usertype == 'patient'
         if 'age' in data:
             update_data['age'] = data['age']

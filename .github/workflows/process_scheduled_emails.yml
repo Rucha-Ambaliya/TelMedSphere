@@ -1,0 +1,50 @@
+name: Send Scheduled Emails
+
+on:
+  schedule:
+    - cron: "*/1 * * * *"  # Runs every 5 minutes
+
+jobs:
+  send_emails:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Restore Scheduled Emails (if exists)
+        uses: actions/download-artifact@v3
+        with:
+          name: scheduled-emails
+          path: backend/utils/
+
+      - name: Check Environment Variables
+        run: |
+          if [ -z "${{ secrets.PORT }}" ] || [ -z "${{ secrets.HOST_EMAIL }}" ] || [ -z "${{ secrets.PASSWORD }}" ]; then
+            echo "❌ Missing environment variables. Check GitHub Secrets!"
+            exit 1
+          fi
+
+      - name: Install dependencies
+        run: pip install requests  # Install only necessary dependencies
+
+      - name: Ensure `send_emails.py` is executable
+        run: chmod +x backend/utils/send_emails.py
+
+      - name: Send Emails
+        env:
+          SMTP_SERVER: "smtp.gmail.com"
+          PORT: ${{ secrets.PORT }}
+          HOST_EMAIL: ${{ secrets.HOST_EMAIL }}
+          PASSWORD: ${{ secrets.PASSWORD }}
+        run: python backend/utils/send_emails.py
+
+      - name: Save Updated Email List
+        uses: actions/upload-artifact@v3
+        with:
+          name: scheduled-emails
+          path: backend/utils/scheduled_emails.json
