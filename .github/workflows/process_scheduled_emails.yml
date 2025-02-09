@@ -2,7 +2,10 @@ name: Send Scheduled Emails
 
 on:
   push:
-    - cron: "*/1 * * * *"  # Runs every 5 minutes
+    branches:
+      - main  # Or any branch you want to trigger the action on
+  schedule:
+    - cron: "*/15 * * * *"  # Runs every 1 minute
 
 jobs:
   send_emails:
