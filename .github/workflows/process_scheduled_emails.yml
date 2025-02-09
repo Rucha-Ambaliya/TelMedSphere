@@ -20,17 +20,23 @@ jobs:
         with:
           python-version: '3.9'
 
-      - name: Restore Scheduled Emails (if exists)
-        continue-on-error: true  # ✅ Prevents failure if artifact is missing
-        uses: actions/download-artifact@v4
-        with:
-          name: scheduled-emails
-          path: backend/utils/
+      - name: Load environment variables from `.env`
+        run: |
+          if [ -f backend/.env ]; then
+            echo "✅ .env file found. Loading..."
+            export $(grep -v '^#' backend/.env | xargs)
+            echo "PORT=${PORT}" >> $GITHUB_ENV
+            echo "HOST_EMAIL=${HOST_EMAIL}" >> $GITHUB_ENV
+            echo "PASSWORD=${PASSWORD}" >> $GITHUB_ENV
+          else
+            echo "❌ .env file missing!"
+            exit 1
+          fi
 
       - name: Check Environment Variables
         run: |
-          if [ -z "${{ secrets.PORT }}" ] || [ -z "${{ secrets.HOST_EMAIL }}" ] || [ -z "${{ secrets.PASSWORD }}" ]; then
-            echo "❌ Missing environment variables. Check GitHub Secrets!"
+          if [ -z "${{ env.PORT }}" ] || [ -z "${{ env.HOST_EMAIL }}" ] || [ -z "${{ env.PASSWORD }}" ]; then
+            echo "❌ Missing environment variables. Check .env file!"
             exit 1
           fi
 
@@ -43,9 +49,9 @@ jobs:
       - name: Send Emails
         env:
           SMTP_SERVER: "smtp.gmail.com"
-          PORT: ${{ secrets.PORT }}
-          HOST_EMAIL: ${{ secrets.HOST_EMAIL }}
-          PASSWORD: ${{ secrets.PASSWORD }}
+          PORT: ${{ env.PORT }}
+          HOST_EMAIL: ${{ env.HOST_EMAIL }}
+          PASSWORD: ${{ env.PASSWORD }}
         run: python backend/utils/send_emails.py
 
       - name: Save Updated Email List
