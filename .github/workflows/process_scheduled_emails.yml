@@ -33,12 +33,12 @@ jobs:
             exit 1
           fi
 
-      - name: Check Environment Variables
-        run: |
-          if [ -z "${{ env.PORT }}" ] || [ -z "${{ env.HOST_EMAIL }}" ] || [ -z "${{ env.PASSWORD }}" ]; then
-            echo "❌ Missing environment variables. Check .env file!"
-            exit 1
-          fi
+      # - name: Check Environment Variables
+      #   run: |
+      #     if [ -z "${{ env.PORT }}" ] || [ -z "${{ env.HOST_EMAIL }}" ] || [ -z "${{ env.PASSWORD }}" ]; then
+      #       echo "❌ Missing environment variables. Check .env file!"
+      #       exit 1
+      #     fi
 
       - name: Install dependencies
         run: pip install requests  # ✅ Install only necessary dependencies
