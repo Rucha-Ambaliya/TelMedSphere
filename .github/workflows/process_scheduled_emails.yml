@@ -3,7 +3,8 @@ name: Send Scheduled Emails
 on:
   push:
     branches:
-      - main  # Or any branch you want to trigger the action on
+      - main
+      - feature/email-appointment  # Or any branch you want to trigger the action on
   schedule:
     - cron: "*/15 * * * *"  # Runs every 1 minute
 
