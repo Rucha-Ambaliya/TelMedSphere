@@ -6,7 +6,7 @@ on:
       - main
       - feature/email-appointment  # Or any branch you want to trigger the action on
   schedule:
-    - cron: "*/15 * * * *"  # Runs every 1 minute
+    - cron: "*/15 * * * *"  # Runs every 15 minutes
 
 jobs:
   send_emails:
@@ -21,7 +21,7 @@ jobs:
           python-version: '3.9'
 
       - name: Restore Scheduled Emails (if exists)
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4  # 🔄 UPDATED TO v4
         with:
           name: scheduled-emails
           path: backend/utils/
@@ -48,7 +48,7 @@ jobs:
         run: python backend/utils/send_emails.py
 
       - name: Save Updated Email List
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4  # 🔄 UPDATED TO v4
         with:
           name: scheduled-emails
           path: backend/utils/scheduled_emails.json
