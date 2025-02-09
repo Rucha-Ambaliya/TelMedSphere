@@ -6,6 +6,9 @@ import os
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from datetime import datetime
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Load environment variables
 SMTP_SERVER = os.getenv("SMTP_SERVER", "smtp.gmail.com")
