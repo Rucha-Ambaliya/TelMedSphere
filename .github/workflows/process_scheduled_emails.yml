@@ -20,18 +20,18 @@ jobs:
         with:
           python-version: '3.9'
 
-      - name: Load environment variables from `.env`
-        run: |
-          if [ -f backend/.env ]; then
-            echo "✅ .env file found. Loading..."
-            export $(grep -v '^#' backend/.env | xargs)
-            echo "PORT=${PORT}" >> $GITHUB_ENV
-            echo "HOST_EMAIL=${HOST_EMAIL}" >> $GITHUB_ENV
-            echo "PASSWORD=${PASSWORD}" >> $GITHUB_ENV
-          else
-            echo "❌ .env file missing!"
-            exit 1
-          fi
+      # - name: Load environment variables from `.env`
+      #   run: |
+      #     if [ -f backend/.env ]; then
+      #       echo "✅ .env file found. Loading..."
+      #       export $(grep -v '^#' backend/.env | xargs)
+      #       echo "PORT=${PORT}" >> $GITHUB_ENV
+      #       echo "HOST_EMAIL=${HOST_EMAIL}" >> $GITHUB_ENV
+      #       echo "PASSWORD=${PASSWORD}" >> $GITHUB_ENV
+      #     else
+      #       echo "❌ .env file missing!"
+      #       exit 1
+      #     fi
 
       # - name: Check Environment Variables
       #   run: |
