@@ -23,21 +23,18 @@ jobs:
       - name: Install dependencies
         run: pip install requests  # ✅ Install only necessary dependencies
 
-      - name: Check Environment Variables
+      - name: Debug: Check File Structure
+        run: ls -R backend/utils  # ✅ Ensure `send_emails.py` is in place
+
+      - name: Debug: Print Environment Variables
+        run: |
+          echo "PORT: ${{ secrets.PORT }}"
+          echo "HOST_EMAIL: ${{ secrets.HOST_EMAIL }}"
+          echo "PASSWORD: (hidden)"
         env:
           PORT: ${{ secrets.PORT }}
           HOST_EMAIL: ${{ secrets.HOST_EMAIL }}
           PASSWORD: ${{ secrets.PASSWORD }}
-        run: |
-          if [ -z "$PORT" ] || [ -z "$HOST_EMAIL" ] || [ -z "$PASSWORD" ]; then
-            echo "❌ Missing environment variables. Set them in GitHub Secrets!"
-            exit 1
-          else
-            echo "✅ All environment variables are set."
-          fi
-
-      - name: Ensure `send_emails.py` is executable
-        run: chmod +x backend/utils/send_emails.py
 
       - name: Send Emails
         env:
@@ -45,12 +42,7 @@ jobs:
           PORT: ${{ secrets.PORT }}
           HOST_EMAIL: ${{ secrets.HOST_EMAIL }}
           PASSWORD: ${{ secrets.PASSWORD }}
-        run: |
-          if [ ! -f backend/utils/send_emails.py ]; then
-            echo "❌ send_emails.py not found!"
-            exit 1
-          fi
-          python backend/utils/send_emails.py
+        run: python backend/utils/send_emails.py
 
       - name: Save Updated Email List (if exists)
         if: success()
