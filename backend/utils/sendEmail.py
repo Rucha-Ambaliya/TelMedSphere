@@ -37,6 +37,9 @@ try:
 except (FileNotFoundError, json.JSONDecodeError):
     scheduled_emails = []
 
+print(f"📨 Schecduled email: {scheduled_emails}")
+
+
 # Get current time in UTC
 current_time = datetime.now().strftime("%Y-%m-%d %H:%M")
 emails_to_send = []
