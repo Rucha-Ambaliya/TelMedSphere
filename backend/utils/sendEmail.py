@@ -41,13 +41,13 @@ print(f"📨 Schecduled email: {scheduled_emails}")
 
 
 # Get current time in UTC
-current_time = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M")
+current_time = datetime.now().strftime("%Y-%m-%d %H:%M")
 emails_to_send = []
 remaining_emails = []
 
 for email in scheduled_emails:
-    email_send_time = datetime.strptime(email["send_time"], "%Y-%m-%d %H:%M").replace(tzinfo=timezone.utc)
-    current_time_dt = datetime.strptime(current_time, "%Y-%m-%d %H:%M").replace(tzinfo=timezone.utc)
+    email_send_time = datetime.strptime(email["send_time"], "%Y-%m-%d %H:%M")
+    current_time_dt = datetime.strptime(current_time, "%Y-%m-%d %H:%M")
 
     print(f"📅 Email Time: {email_send_time} | 🕒 Current Time: {current_time_dt}")
 
