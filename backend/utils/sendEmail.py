@@ -76,6 +76,7 @@ def send_email(subject, body, recipient):
 
 # Send all due emails
 for email in emails_to_send:
+    print(f"📨 Sending email to: {email['recipient']} at {email['send_time']}...")
     send_email(email["subject"], email["body"], email["recipient"])
 
 # Save remaining emails
