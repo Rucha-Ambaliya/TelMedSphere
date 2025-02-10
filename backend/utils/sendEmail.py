@@ -15,6 +15,7 @@ SMTP_SERVER = os.getenv("SMTP_SERVER", "smtp.gmail.com")
 SMTP_PORT = int(os.getenv("PORT", 587))  # Default to 587 if not set
 EMAIL_USER = os.getenv("HOST_EMAIL", "")
 EMAIL_PASS = os.getenv("PASSWORD", "")
+print("smtp port", SMTP_PORT)
 
 if not EMAIL_USER or not EMAIL_PASS:
     raise ValueError("❌ Missing SMTP credentials. Check GitHub Secrets!")
