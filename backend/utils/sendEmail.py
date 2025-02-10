@@ -6,7 +6,6 @@ import os
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from datetime import datetime
-import pytz
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -40,20 +39,19 @@ except (FileNotFoundError, json.JSONDecodeError):
 
 print(f"📨 Schecduled email: {scheduled_emails}")
 
-# Define IST timezone
-IST = pytz.timezone("Asia/Kolkata")
 
 # Get current time in UTC
-current_time_ist = datetime.now(IST).strftime("%Y-%m-%d %H:%M")
+current_time = datetime.now().strptime("%Y-%m-%d %H:%M")
 emails_to_send = []
 remaining_emails = []
 
 for email in scheduled_emails:
-    email_send_time = IST.localize(datetime.strptime(email["send_time"], "%Y-%m-%d %H:%M"))
+    email_send_time = datetime.strptime(email["send_time"], "%Y-%m-%d %H:%M")
+    current_time_dt = datetime.strptime(current_time, "%Y-%m-%d %H:%M")
 
-    print(f"📅 Email Time: {email_send_time} | 🕒 Current Time: {current_time_ist}")
+    print(f"📅 Email Time: {email_send_time} | 🕒 Current Time: {current_time_dt}")
 
-    if email["send_time"] is None or email["send_time"] <= current_time_ist:
+    if email["send_time"] is None or email["send_time"] <= current_time:
         print("email in schecduled mails2", email)
         emails_to_send.append(email)
     else:
