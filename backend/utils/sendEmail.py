@@ -5,7 +5,7 @@ import smtplib
 import os
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timedelta
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -46,20 +46,19 @@ IST_OFFSET = timedelta(hours=5, minutes=30)
 current_time_dt = datetime.utcnow().replace(second=0, microsecond=0)
 
 emails_to_send = []
-remaining_emails = []
+remaining_emails = []  # Start with an empty list
 
 for email in scheduled_emails:
     # Convert email time from IST to UTC
-    email_send_time = datetime.strptime(email["send_time"], "%Y-%m-%d %H:%M")  # Convert to datetime
-    email_send_time = email_send_time - IST_OFFSET  # Convert IST to UTC
+    email_send_time = datetime.strptime(email["send_time"], "%Y-%m-%d %H:%M") - IST_OFFSET
 
     print(f"📅 Email Time (UTC): {email_send_time} | 🕒 Current Time (UTC): {current_time_dt}")
 
     if email_send_time <= current_time_dt:
-        print("✅ Email is due for sending:", email)
+        print(f"✅ Email is due for sending: {email}")
         emails_to_send.append(email)
     else:
-        remaining_emails.append(email)
+        remaining_emails.append(email)  # Add future emails only
 
 def send_email(subject, body, recipient):
     """Send an email to a single recipient."""
@@ -96,8 +95,17 @@ for email in emails_to_send:
         print(f"❌ Email sending failed for {email['recipient']}, keeping in JSON.")
         remaining_emails.append(email)  # Keep failed emails in the JSON file
 
-# Save remaining emails (only failed or future emails)
+# **Save only remaining (future or failed) emails**
 with open(JSON_FILE, "w") as file:
     json.dump(remaining_emails, file, indent=4)
+
+temp = []
+# Load scheduled emails
+try:
+    with open(JSON_FILE, "r") as file:
+        temp = json.load(file)
+    print("temp.............", temp)
+except (FileNotFoundError, json.JSONDecodeError):
+    temp = []
 
 print("✅ Scheduled emails processed successfully.")
