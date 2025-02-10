@@ -44,6 +44,6 @@ jobs:
 
       - name: Commit and Push Changes
         run: |
-          git add scheduled_emails.json
+          git add backend/utils/scheduled_emails.json
           git commit -m "📧 Update scheduled_emails.json after email dispatch" || echo "No changes to commit"
           git push https://${{ secrets.TELMEDSPHERE_GITHUB_TOKEN }}@github.com/Rucha-Ambaliya/TelMedSPhere.git feature/email-appointment
