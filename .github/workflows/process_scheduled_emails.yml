@@ -6,7 +6,7 @@ on:
       - main
       - feature/email-appointment  # Adjust as needed
   schedule:
-    - cron: "*/1 * * * *"  # Runs every 15 minutes
+    - cron: "*/15 * * * *"  # Runs every 15 minutes
 
 jobs:
   send_emails:
@@ -21,10 +21,10 @@ jobs:
           python-version: '3.9'
 
       - name: Install dependencies
-        run: pip install requests  # ✅ Install only necessary dependencies
+        run: pip install requests python-dotenv  # ✅ Install python-dotenv
 
       - name: Debug Check File Structure
-        run: ls -R backend/utils  # ✅ Ensure `send_emails.py` is in place
+        run: ls -R backend/utils  # ✅ Ensure `sendEmail.py` is in place
 
       - name: Send Emails
         env:

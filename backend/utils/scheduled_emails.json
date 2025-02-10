@@ -1,8 +1,14 @@
 [
     {
-        "subject": "Your Appointment has been booked on 2025-02-10 at 18:00 with Dr. Doctor-bhaveshambaliya94",
-        "body": "thank you",
+        "subject": "Your Appointment Confirmation",
+        "body": "Dear Patient,<br><br>Your appointment has been successfully booked on <strong>2025-02-10</strong> at <strong>18:00</strong> with <strong>Dr. Bhavesh Ambaliya</strong>.<br><br>Thank you for choosing our service!<br><br>Best Regards,<br>TelMedSphere Team",
         "recipient": "rambaliyaforall@gmail.com",
-        "send_time": "2025-02-09 23:03"
+        "send_time": "2025-02-10 08:55"
+    },
+    {
+        "subject": "Your Appointment Confirmation",
+        "body": "Dear Patient,<br><br>Your appointment has been successfully booked on <strong>2025-02-10</strong> at <strong>18:00</strong> with <strong>Dr. Bhavesh Ambaliya</strong>.<br><br>Thank you for choosing our service!<br><br>Best Regards,<br>TelMedSphere Team",
+        "recipient": "rambaliyaforall@gmail.com",
+        "send_time": "2025-02-10 08:59"
     }
 ]
