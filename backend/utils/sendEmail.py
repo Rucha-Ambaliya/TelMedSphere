@@ -5,7 +5,7 @@ import smtplib
 import os
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from datetime import datetime
+from datetime import datetime, timezone
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -41,12 +41,16 @@ print(f"📨 Schecduled email: {scheduled_emails}")
 
 
 # Get current time in UTC
-current_time = datetime.now().strftime("%Y-%m-%d %H:%M")
+current_time = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M")
 emails_to_send = []
 remaining_emails = []
 
 for email in scheduled_emails:
-    print("email in schecduled mails1", email)
+    email_send_time = datetime.strptime(email["send_time"], "%Y-%m-%d %H:%M").replace(tzinfo=timezone.utc)
+    current_time_dt = datetime.strptime(current_time, "%Y-%m-%d %H:%M").replace(tzinfo=timezone.utc)
+
+    print(f"📅 Email Time: {email_send_time} | 🕒 Current Time: {current_time_dt}")
+
     if email["send_time"] is None or email["send_time"] <= current_time:
         print("email in schecduled mails2", email)
         emails_to_send.append(email)
