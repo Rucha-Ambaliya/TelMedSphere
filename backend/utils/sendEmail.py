@@ -87,12 +87,16 @@ def send_email(subject, body, recipient):
         print(f"❌ Failed to send email to {recipient}: {e}")
         return False
 
-# Send all due emails
+# Send all due emails and update remaining_emails list
 for email in emails_to_send:
     print(f"📨 Sending email to: {email['recipient']} at {email['send_time']}...")
-    send_email(email["subject"], email["body"], email["recipient"])
+    if send_email(email["subject"], email["body"], email["recipient"]):
+        print(f"✅ Email successfully sent to {email['recipient']}, removing from JSON.")
+    else:
+        print(f"❌ Email sending failed for {email['recipient']}, keeping in JSON.")
+        remaining_emails.append(email)  # Keep failed emails in the JSON file
 
-# Save remaining emails
+# Save remaining emails (only failed or future emails)
 with open(JSON_FILE, "w") as file:
     json.dump(remaining_emails, file, indent=4)
 
