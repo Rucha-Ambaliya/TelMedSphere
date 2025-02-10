@@ -5,7 +5,7 @@ import smtplib
 import os
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -37,22 +37,26 @@ try:
 except (FileNotFoundError, json.JSONDecodeError):
     scheduled_emails = []
 
-print(f"📨 Schecduled email: {scheduled_emails}")
+print(f"📨 Scheduled emails: {scheduled_emails}")
 
+# Define IST (Indian Standard Time) offset
+IST_OFFSET = timedelta(hours=5, minutes=30)
 
 # Get current time in UTC
-current_time = datetime.now().strptime("%Y-%m-%d %H:%M")
+current_time_dt = datetime.utcnow().replace(second=0, microsecond=0)
+
 emails_to_send = []
 remaining_emails = []
 
 for email in scheduled_emails:
-    email_send_time = datetime.strptime(email["send_time"], "%Y-%m-%d %H:%M")
-    current_time_dt = datetime.strptime(current_time, "%Y-%m-%d %H:%M")
+    # Convert email time from IST to UTC
+    email_send_time = datetime.strptime(email["send_time"], "%Y-%m-%d %H:%M")  # Convert to datetime
+    email_send_time = email_send_time - IST_OFFSET  # Convert IST to UTC
 
-    print(f"📅 Email Time: {email_send_time} | 🕒 Current Time: {current_time_dt}")
+    print(f"📅 Email Time (UTC): {email_send_time} | 🕒 Current Time (UTC): {current_time_dt}")
 
-    if email["send_time"] is None or email["send_time"] <= current_time:
-        print("email in schecduled mails2", email)
+    if email_send_time <= current_time_dt:
+        print("✅ Email is due for sending:", email)
         emails_to_send.append(email)
     else:
         remaining_emails.append(email)
