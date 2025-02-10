@@ -46,7 +46,9 @@ emails_to_send = []
 remaining_emails = []
 
 for email in scheduled_emails:
+    print("email in schecduled mails1", email)
     if email["send_time"] is None or email["send_time"] <= current_time:
+        print("email in schecduled mails2", email)
         emails_to_send.append(email)
     else:
         remaining_emails.append(email)
