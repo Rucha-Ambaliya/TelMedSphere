@@ -90,8 +90,8 @@ const Home = () => {
   const [availableLoading, setAvailableLoading] = useState(false);
 
   const handleFeedbackClose = () => {
-    httpClient.post("/doctor_app", {
-      email: localStorage.getItem("lastMeetMail"),
+    httpClient.put("/update_doctor_ratings", {
+      demail: localStorage.getItem("lastMeetMail"),
       stars: feedbackRate+1,
     });
     localStorage.setItem("lastMeetWith", null);
@@ -148,10 +148,10 @@ const Home = () => {
       } else {
         toggleLoading(true);
         httpClient
-          .post("/set_appointment", { email: localStorage.getItem("email") })
+          .post("/doctor_apo", { demail: localStorage.getItem("email") })
           .then((res) => {
             let upcoming = [];
-            res.data.appointments
+            res.data.upcomingAppointments
               .sort()
               .reverse()
               .forEach((appointment) => {
@@ -291,7 +291,7 @@ const Home = () => {
     setAvailablemodal(false);
     setTimeout(() => {
       httpClient.put("/doctor_avilability", {
-        email: localStorage.getItem("email"),
+        demail: localStorage.getItem("email"),
       });
       setIsAlert("");
       setAlertmessage("");

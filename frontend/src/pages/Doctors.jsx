@@ -74,10 +74,6 @@ const Doctors = () => {
   }, [isScheduleMeet, curDate]);
 
   useEffect(() => {
-    console.log("available", available);
-  }, [available]);
-
-  useEffect(() => {
     httpClient
       .post("/get_wallet", {
         email: localStorage.getItem("email"),
@@ -156,9 +152,9 @@ const Doctors = () => {
     if (!selectEmail) return;
 
     httpClient
-      .post("/set_appointment", { email: selectEmail })
+      .post("/doctor_apo", { demail: selectEmail })
       .then((res) => {
-        const appointments = res.data.appointments;
+        const appointments = res.data.upcomingAppointments;
         let times = {
           "08:00": true,
           "09:00": true,
@@ -177,7 +173,6 @@ const Doctors = () => {
             return itemDate === selectedDate;
           })
           .forEach((item) => {
-            console.log("item", item);
             times[item.time] = false;
           });
         setAvailable(times);
@@ -189,14 +184,12 @@ const Doctors = () => {
     setMeetScheduling(true);
     setTimeout(() => {
       setMeetScheduling(false);
-
       httpClient
-        .post("/set_appointment", {
-          email: selectEmail,
+        .post("/doctor_apo", {
+          demail: selectEmail,
         })
         .then((res) => {
-          // console.log(res.data);
-          if (handleSchedule(res.data.appointments)) {
+          if (handleSchedule(res.data.upcomingAppointments)) {
             setScheduleAlert(2);
             const datetime = `${curDate}${curTime.replace(":", "")}`;
             const link = `/instant-meet?meetId=${datetime}&selectedDoc=${selectedDoc}&selectedMail=${encodeURIComponent(
@@ -223,8 +216,8 @@ const Doctors = () => {
               });
 
             httpClient
-              .put("/set_appointment", {
-                email: selectEmail,
+              .put("/doctor_apo", {
+                demail: selectEmail,
                 date: curDate,
                 time: curTime,
                 patient: localStorage.getItem("username"),
@@ -237,8 +230,22 @@ const Doctors = () => {
               .catch((err) => {
                 console.log(err);
               });
-            // TODO:
-            // Append the date, time, patient details and meet link to the <<doctor.upcomingAppointments>>
+
+            httpClient
+              .put("/set_appointment", {
+                pemail: localStorage.getItem("email"),
+                date: curDate,
+                time: curTime,
+                doctor: selectedDoc,
+                demail: selectEmail,
+                link: link,
+              })
+              .then((res) => {
+                console.log(res);
+              })
+              .catch((err) => {
+                console.log(err);
+              });
           } else {
             setScheduleAlert(1);
           }
@@ -246,12 +253,6 @@ const Doctors = () => {
         .catch((err) => {
           console.log(err);
         });
-
-      // TODO: fetch the <<selectedDoc>> doctor data
-      // check the doctor availability using <<doctor.upcomingAppointments>>
-      // now pass the in the <<handleSchedule(doctor.upcomingAppointments)>>
-      // Note that the <<doctor.upcomingAppointments>> should be an array and it should contain date and time
-      // <<handleSchedule>> function returns true if slot is available
 
       setTimeout(() => {
         setScheduleAlert(0);
@@ -502,7 +503,7 @@ const Doctors = () => {
             ref={modalRef}
           >
             <div className="justify-between items-center border-b pb-4 mb-4">
-            <IoMdClose
+              <IoMdClose
                 className="text-blue-5 hover:text-blue-8 cursor-pointer transition-colors duration-300 ease-in-out block"
                 onClick={() => setMeetModal(false)}
               />
@@ -513,11 +514,15 @@ const Doctors = () => {
 
             <div className="space-y-4">
               <div className="flex justify-between">
-                <span className="text-blue-7 text-[1.3em] font-normal">Doctor Fee {`(${selectedDoc})`}</span>
+                <span className="text-blue-7 text-[1.3em] font-normal">
+                  Doctor Fee {`(${selectedDoc})`}
+                </span>
                 <span className="font-bold text-blue-7 w-12">₹ {curFee}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-blue-7 text-[1.3em] font-normal">Available Balance</span>
+                <span className="text-blue-7 text-[1.3em] font-normal">
+                  Available Balance
+                </span>
                 <span className="font-bold text-blue-7">₹ {balance}</span>
               </div>
               <div className="flex justify-between pt-4 border-t border-blue-2">
@@ -689,7 +694,6 @@ const Doctors = () => {
 
                       <div className="w-full flex justify-center">
                         <div className="grid grid-cols-3 gap-[5px] max-w-[360px] w-[90vw] border-[2px] border-blue-3 rounded-[8px] p-[5px]">
-                          {console.log("timing in map", timings)}
                           {Object.keys(available).map((time, index) => (
                             <button
                               key={index}
@@ -754,4 +758,3 @@ const Doctors = () => {
 };
 
 export default Doctors;
-

@@ -157,7 +157,7 @@ const MeetPage = () => {
       demail: searchparams.get("selectedMail"),
     });
     httpClient.post("/add_wallet_history", {
-      email: searchparams.get("pemail"),
+      email: searchparams.get("email"),
       history: {
         desc: "Doctor Fee",
         amount: searchparams.get("fee"),

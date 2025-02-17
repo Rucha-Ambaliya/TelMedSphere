@@ -498,38 +498,52 @@ def mail_file():
 
 # ----------- appointment routes -----------------
 
-@app.route('/doctor_app', methods=['POST'])
-def doctor_app():
+@app.route('/doctor_apo', methods=['POST', 'PUT'])
+def doctor_apo():
     data = request.get_json()
-    email = data['email']
-    doctor.update_one({'email': email}, {'$inc': {'appointments': 1, 'stars': data['stars']}})
-    return jsonify({'message': 'Doctor status updated successfully'}), 200
-
-@app.route('/set_appointment', methods=['POST', 'PUT'])
-def set_appointment():
-    data = request.get_json()
-    email = data['email']
+    email = data['demail']
     doc = doctor.find_one({'email': email})
+
     if request.method == 'POST':
-        return jsonify({'message': 'Doctor Appointments', 'appointments': doc['upcomingAppointments']}), 200
+        return jsonify({'message': 'Doctor Appointments', 'upcomingAppointments': doc['upcomingAppointments']}), 200
     else:
         doc['upcomingAppointments'].append({
             "date": data['date'],
             "time": data['time'],
             "patient": data['patient'],
-            "pemail": data['pemail'],
+            "demail": data['demail'],
             "link": data['link'],
         })
-
-        pat = patients.find_one({'email': data['pemail']})
-    
-        whatsapp_message({
-            "to": f"whatsapp:{pat['phone']}",
-            "body": "Your Appointment has been booked on " + data['date'] + " at "+ data['time'] + " with Dr. " + doc['username'] +"."+"\n"+doc[email]
-        })
-
         doctor.update_one({'email': email}, {'$set': {'upcomingAppointments': doc['upcomingAppointments']}})
-        return jsonify({'message': 'Doctor status updated successfully'}), 200
+        return jsonify({
+            'message': 'Doctor status updated successfully',
+            'upcomingAppointments': doc['upcomingAppointments']
+        }), 200
+
+@app.route('/update_doctor_ratings', methods=['PUT'])
+def doctor_app():
+    data = request.get_json()
+    demail = data['demail']
+    doctor.update_one({'email': demail}, {'$inc': {'appointments': 1, 'stars': data['stars']}})
+    return jsonify({'message': 'Doctor status updated successfully'}), 200
+
+@app.route('/set_appointment', methods=['POST', 'PUT'])
+def set_appointment():
+    data = request.get_json()
+    demail = data['demail']
+    pemail = data['pemail']
+
+    doc = doctor.find_one({'email': demail})
+    pat = patients.find_one({'email': pemail})
+
+    whatsapp_message({
+        "to": f"whatsapp:{pat['phone']}",
+        "body": "Your Appointment has been booked on " + data['date'] + " at "+ data['time'] + " with Dr. " + doc['username'] +"."+" "+doc['email']
+    })
+
+    return jsonify({
+        'message': 'Appoitment Fixed Successfully', 
+    }), 200
 
 @app.route('/patient_apo', methods=['POST', 'PUT'])
 def patient_apo():
@@ -606,8 +620,8 @@ def currently_in_meet():
 @app.route("/doctor_avilability", methods=['PUT'])
 def doctor_avilability():
     data = request.get_json()
-    user = data['email']
-    doctor.update_one({'email': user}, {'$set': {'status': 'online'}})
+    demail = data['demail']
+    doctor.update_one({'email': demail}, {'$set': {'status': 'online'}})
     return jsonify({'message': 'Doctor status updated successfully'}), 200
 
 # ----------- orders routes -----------------
@@ -963,7 +977,6 @@ def get_all_website_feedback():
             if feedback.get("keep_it_anonymous"):
                 feedback.pop("username", None)
                 feedback.pop("user_email", None)
-        print("feedback", feedback)
         return jsonify(feedbacks),200
     except Exception as e:
         return jsonify({"error": str(e)}), 500       

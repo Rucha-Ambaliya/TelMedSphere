@@ -22,7 +22,6 @@ const TestimonialSection = () => {
         }
 
         const sortedData = data.sort((a, b) => b.rating - a.rating);
-        console.log("sorted data", response);
         setTestimonials([...sortedData]);
       } catch (error) {
         console.error("Error fetching testimonials:", error);
