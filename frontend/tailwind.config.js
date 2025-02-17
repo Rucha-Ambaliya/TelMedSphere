@@ -48,12 +48,13 @@ module.exports = {
         fadeInLeft: "fadeInLeft 1.5s ease-in-out forwards",
         maintain: "maintain 2s linear infinite",
         rotate: "rotate 2s linear infinite",
-        blink: 'blink 0.7s infinite'
+        blink: "blink 0.7s infinite",
+        progressFill: "progressFill 2s linear forwards",
       },
       keyframes: {
         blink: {
-          '0%, 100%': { opacity: '0' },
-          '50%': { opacity: '1' }
+          "0%, 100%": { opacity: "0" },
+          "50%": { opacity: "1" },
         },
         spark: {
           "0%": {
@@ -87,6 +88,10 @@ module.exports = {
         rotate: {
           "0%": { transform: "rotate(0deg)" },
           "100%": { transform: "rotate(-360deg)" },
+        },
+        progressFill: {
+          "0%": { width: "0%" },
+          "100%": { width: "100%" },
         },
       },
       zIndex: {
